@@ -1,22 +1,66 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: hello
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: hello
   template:
     metadata:
       labels:
-        app: nginx
+        app: hello
+        version: v1
     spec:
       containers:
-      - name: nginx
-        image: nginx
+      - name: hello
+        image: kevinsena/hello-go
         resources:
           limits:
             memory: "128Mi"
             cpu: "500m"
         ports:
-        - containerPort: 80
+        - containerPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+        version: v2
+    spec:
+      containers:
+      - name: hello
+        image: kevinsena/hello-go:v2
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello
+  ports:
+  - port: 8000
+    targetPort: 8080
+    nodePort: 30000
