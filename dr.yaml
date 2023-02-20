@@ -4,6 +4,8 @@ metadata:
   name: hello-vs
 spec:
   host: hello-service
+  trafficPolicy:
+    simple: ROUND_ROBIN
   subsets:
   - name: v1
     labels:
@@ -11,3 +13,5 @@ spec:
   - name: v2
     labels:
       version: v2
+    trafficPolicy:
+      simple: LEAST_CONN
